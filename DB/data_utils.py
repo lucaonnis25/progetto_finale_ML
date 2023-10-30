@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from watchfiles.cli import logger
 import re
 
+
 class DataUtils:
     def __init__(self, sqlite_db):
         self.sqlite_db = sqlite_db
@@ -59,38 +60,33 @@ class DataUtils:
             conn = sqlite3.connect(self.sqlite_db)
             cursor = conn.cursor()
 
-            if table_name == "regioni":
-                column_names = list(data[0].keys())
-                cursor.execute(f'''
-                    CREATE TABLE IF NOT EXISTS {table_name} (
-                        {column_names[0]} INTEGER PRIMARY KEY,
-                        {column_names[1]} VARCHAR
-                    )
-                ''')
-                for record in data:
-                    cursor.execute(
-                        f'INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}) VALUES (?, ?)',
-                        (record[column_names[0]], record[column_names[1]])
-                    )
-            else:
-                column_names = list(data[0].keys())
-                cursor.execute(f'''
-                    CREATE TABLE IF NOT EXISTS {table_name} (
-                        id INTEGER,
-                        {column_names[0]} INTEGER,
-                        {column_names[1]} INTEGER,
-                        {column_names[2]} INTEGER,
-                        {column_names[3]} INTEGER,
-                        CONSTRAINT pk_{table_name} PRIMARY KEY (id),
-                        CONSTRAINT fk_{table_name} FOREIGN KEY ({column_names[0]}) REFERENCES regioni(id_regione)
-                    )
-                ''')
-                for record in data:
-                    cursor.execute(
-                        f'INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}, {column_names[2]}, {column_names[3]}) VALUES (?, ?, ?, ?)',
-                        (record[column_names[0]], record[column_names[1]], record[column_names[2]],
-                         record[column_names[3]])
-                    )
+            column_names = list(data[0].keys())
+            cursor.execute(f'''
+                CREATE TABLE IF NOT EXISTS {table_name} (
+                    id INTEGER,
+                    {column_names[0]} REAL,
+                    {column_names[1]} REAL,
+                    {column_names[2]} REAL,
+                    {column_names[3]} REAL,
+                    {column_names[4]} REAL,
+                    {column_names[5]} REAL,
+                    {column_names[6]} REAL,
+                    {column_names[7]} REAL,
+                    {column_names[8]} REAL,
+                    {column_names[9]} REAL,
+                    {column_names[10]} REAL,
+                    {column_names[11]} REAL,
+                    CONSTRAINT pk_{table_name} PRIMARY KEY (id)
+                )
+            ''')
+            for record in data:
+                cursor.execute(
+                    f'INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}, {column_names[2]}, {column_names[3]}, {column_names[4]}, {column_names[5]}, {column_names[6]}, {column_names[7]}, {column_names[8]}, {column_names[9]}, {column_names[10]}, {column_names[11]}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)',
+                    (record[column_names[0]], record[column_names[1]], record[column_names[2]],
+                     record[column_names[3]], record[column_names[4]], record[column_names[5]], record[column_names[6]],
+                     record[column_names[7]], record[column_names[8]], record[column_names[9]], record[column_names[10]],
+                     record[column_names[11]])
+                )
 
             conn.commit()
             conn.close()
@@ -107,20 +103,15 @@ class DataUtils:
             conn = sqlite3.connect(self.sqlite_db)
             cursor = conn.cursor()
             query = f'CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY'
-            has_region = False
+
             for col in column_name:
-                if col == 'regione':
-                    query += f', {col} INTEGER, FOREIGN KEY ({col}) REFERENCES regioni(id_regione)'
-                    has_region = True
-                else:
-                    query += f', {col} INTEGER'
+                query += f', {col} REAL'
             query += ')'
             cursor.execute(query)
 
             conn.commit()
             conn.close()
-            if has_region:
-                print("Chiave esterna per 'regione' aggiunta correttamente.")
+
         except Exception as e:
             error_message = f"Si è verificato un errore: {str(e)}"
             print(error_message)
@@ -171,9 +162,8 @@ class DataUtils:
             cursor = conn.cursor()
 
             for record in data:
-                regione = record.get("Regione")
-                anno = record.get("Anno")
-                cursor.execute(f"DELETE FROM {table_name} WHERE Regione = ? AND Anno = ?", (regione, anno))
+                id = record.get("id")
+                cursor.execute(f"DELETE FROM {table_name} WHERE Id = ?", id)
 
             conn.commit()
             conn.close()
