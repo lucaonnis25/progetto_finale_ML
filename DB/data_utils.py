@@ -7,6 +7,7 @@ import re
 
 
 class DataUtils:
+    # inizializzo la classe passando il db da utilizzare
     def __init__(self, sqlite_db):
         self.sqlite_db = sqlite_db
 

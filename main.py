@@ -13,7 +13,7 @@ async def root():
 @app.post("/crea_con_dati")
 async def create_table_with_data(json_data: dict):
     try:
-        # estrazione dati da json
+        # estrazione dei dati contenuti nel json
         table_name = json_data.get("table_name", "")
         data = json_data.get("data", [])
 
@@ -25,7 +25,7 @@ async def create_table_with_data(json_data: dict):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/crea_vuoto")
+@app.post("/crea_tabella_vuota")
 async def create_empty_table(json_data: dict):
     try:
         table_name = json_data.get("table_name", "")
@@ -43,7 +43,7 @@ async def create_empty_table(json_data: dict):
 @app.post("/inserisci")
 async def insert_json_into_table(json_data: dict):
     try:
-        # estrazione dati da json
+        # estrazione dei dati contenuti nel json
         table_name = json_data.get("table_name", "")
         data = json_data.get("data", [])
 
