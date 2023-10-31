@@ -34,7 +34,7 @@ async def create_table_with_data(json_data: dict):
         utils = DataUtils(sqlite_db)
         utils.create_table_with_data(data, table_name)
 
-        return {"message": "Tabella con dati salvati nel database con successo."}
+        return {"message": "tabella con dati salvata nel database con successo."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -47,7 +47,7 @@ async def create_empty_table(json_data: dict):
 
         utils = DataUtils(sqlite_db)
         utils.create_empty_table(column_name, table_name)
-        return {"message": f"Tabella {table_name} creata con successo"}
+        return {"message": f"tabella {table_name} creata con successo"}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -65,7 +65,7 @@ async def insert_json_into_table(json_data: dict):
 
         utils.insert_data_from_json(data, table_name)
 
-        return {"message": "Dati JSON inseriti nel database con successo."}
+        return {"message": "dati inseriti nel database con successo."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -80,7 +80,7 @@ async def delete_data_from_table(json_data: dict):
 
         utils.delete_data(data, table_name)
 
-        return {"message": "Dati eliminati con successo."}
+        return {"message": "dati eliminati con successo."}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -98,6 +98,6 @@ async def update_data(json_data: dict):
         utils = DataUtils(sqlite_db)
         utils.update_table(table_name, new_value, condition_column, condition_value, condition_id)
 
-        return {"message": f"Aggiornamento completato nella tabella '{table_name}'"}
+        return {"message": f"aggiornamento della tabella '{table_name}'"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Si è verificato un errore: {str(e)}")
