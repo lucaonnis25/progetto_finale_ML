@@ -51,6 +51,7 @@ class DataUtils:
                 return False
         return True
 
+# utilizzo questa funzione per importare i dataset che hanno già dei dati al loro interno
     def create_table_with_data(self, data, table_name):
         try:
             if not self.valid_input_table(table_name):
@@ -119,6 +120,7 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
+# funzione per inserire dati in una tabella esistente
     def insert_data_from_json(self, data, table_name):
         try:
             conn = sqlite3.connect(self.sqlite_db)
@@ -127,11 +129,13 @@ class DataUtils:
                 cursor = conn.cursor()
                 for record in data:
                     cursor.execute(
-                        f'INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}, {column_names[2]}, {column_names[3]}) VALUES (?, ?, ?, ?)',
-                        (
-                            record[column_names[0]], record[column_names[1]], record[column_names[2]],
-                            record[column_names[3]]
-                        ))
+                    f'INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}, {column_names[2]}, {column_names[3]}, {column_names[4]}, {column_names[5]}, {column_names[6]}, {column_names[7]}, {column_names[8]}, {column_names[9]}, {column_names[10]}, {column_names[11]}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)',
+                    (record[column_names[0]], record[column_names[1]], record[column_names[2]],
+                     record[column_names[3]], record[column_names[4]], record[column_names[5]], record[column_names[6]],
+                     record[column_names[7]], record[column_names[8]], record[column_names[9]], record[column_names[10]],
+                     record[column_names[11]])
+
+                        )
 
                 conn.commit()
                 conn.close()
@@ -143,34 +147,19 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
-    def create_dataframe_from_sql(self, tabella):
-        try:
-            conn = sqlite3.connect(self.sqlite_db)
-
-            query = input("Inserire la query: ")
-
-            df = pd.read_sql(query, conn)
-
-            conn.close()
-
-            return df
-        except Exception as e:
-            print(f"Si è verificato un errore: {str(e)}")
-
     def delete_data(self, data, table_name):
         try:
             conn = sqlite3.connect(self.sqlite_db)
             cursor = conn.cursor()
 
             for record in data:
-                id = record.get("id")
-                cursor.execute(f"DELETE FROM {table_name} WHERE Id = ?", id)
+                id_value = record.get("id")
+                cursor.execute(f"DELETE FROM {table_name} WHERE id = ?", (id_value,))
 
             conn.commit()
             conn.close()
 
             print(f'Dati eliminati con successo dalla tabella {table_name}')
-
         except Exception as e:
             error_message = f"Si è verificato un errore: {str(e)}"
             print(error_message)

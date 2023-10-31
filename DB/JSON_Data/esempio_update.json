@@ -1,0 +1,7 @@
+{
+  "table_name": "dati_vini_test",
+  "new_value": "80",
+  "condition_column": "fixed_acidity",
+  "condition_value": "2",
+  "condition_id": "id"
+}

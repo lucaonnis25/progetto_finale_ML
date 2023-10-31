@@ -9,6 +9,20 @@ sqlite_db = 'dbML.sqlite'
 async def root():
     return {"message": "Hello World"}
 
+# GET
+# passare json con table_name : nome tabella desiderata
+@app.post("/get")
+async def get_data_json(json_data: dict):
+    try:
+        table_name = json_data.get("table_name", "")
+
+        utils = DataUtils(sqlite_db)
+        data = utils.get_data(table_name)
+        return {"data": data}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 # CREATE
 @app.post("/crea_con_dati")
 async def create_table_with_data(json_data: dict):
@@ -54,3 +68,36 @@ async def insert_json_into_table(json_data: dict):
         return {"message": "Dati JSON inseriti nel database con successo."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+#DELETE
+@app.delete("/delete")
+async def delete_data_from_table(json_data: dict):
+    try:
+        table_name = json_data.get("table_name", "")
+        data = json_data.get("data", [])
+
+        utils = DataUtils(sqlite_db)
+
+        utils.delete_data(data, table_name)
+
+        return {"message": "Dati eliminati con successo."}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+#UPDATE
+@app.put("/update")
+async def update_data(json_data: dict):
+    try:
+        table_name = json_data.get('table_name')
+        condition_column = json_data.get('condition_column')
+        condition_value = json_data.get('condition_value')
+        new_value = json_data.get('new_value')
+        condition_id = json_data.get('condition_id')
+
+        utils = DataUtils(sqlite_db)
+        utils.update_table(table_name, new_value, condition_column, condition_value, condition_id)
+
+        return {"message": f"Aggiornamento completato nella tabella '{table_name}'"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Si è verificato un errore: {str(e)}")

@@ -1,0 +1,11 @@
+{
+  "table_name": "dati_vini_test",
+  "data": [
+    {
+      "id": 1
+    },
+    {
+      "id": 3
+    }
+  ]
+}
