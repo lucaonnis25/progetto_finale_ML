@@ -147,6 +147,28 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
+    def insert_risultati_modello(self, data, table_name):
+        try:
+            conn = sqlite3.connect(self.sqlite_db)
+            if data:
+                column_names = list(data[0].keys())
+                cursor = conn.cursor()
+                for record in data:
+                    cursor.execute(
+                    f'INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}) VALUES (?, ?)',
+                    (record[column_names[0]], record[column_names[1]])
+
+                        )
+
+                conn.commit()
+                conn.close()
+
+                print(f'Dati inseriti con successo nella tabella {table_name}')
+        except Exception as e:
+            error_message = f"Si è verificato un errore: {str(e)}"
+            print(error_message)
+            logger.error(error_message)
+            raise HTTPException(status_code=500, detail=error_message)
     def delete_data(self, data, table_name):
         try:
             conn = sqlite3.connect(self.sqlite_db)
