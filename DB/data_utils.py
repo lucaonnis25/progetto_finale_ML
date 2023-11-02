@@ -147,28 +147,27 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
-    def insert_risultati_modello(self, data, table_name):
+    def insert_data_into_db(self, json_data: dict):
         try:
-            conn = sqlite3.connect(self.sqlite_db)
-            if data:
-                column_names = list(data[0].keys())
-                cursor = conn.cursor()
-                for record in data:
-                    cursor.execute(
-                    f'INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}) VALUES (?, ?)',
-                    (record[column_names[0]], record[column_names[1]])
+            table_name = json_data.get("table_name")
+            data = json_data.get("data")
 
-                        )
+            conn = sqlite3.connect('path_to_your_sqlite_db.db')
+            cursor = conn.cursor()
 
-                conn.commit()
-                conn.close()
+            for item in data:
+                quality = item.get("quality")
+                predicted_quality = item.get("predicted_quality")
+                cursor.execute(f"INSERT INTO {table_name} (quality, predicted_quality) VALUES (?, ?)",
+                               (quality, predicted_quality))
 
-                print(f'Dati inseriti con successo nella tabella {table_name}')
+            conn.commit()
+            conn.close()
+
+            return {"message": "Dati inseriti nel database con successo."}
+
         except Exception as e:
-            error_message = f"Si è verificato un errore: {str(e)}"
-            print(error_message)
-            logger.error(error_message)
-            raise HTTPException(status_code=500, detail=error_message)
+            raise HTTPException(status_code=500, detail=str(e))
     def delete_data(self, data, table_name):
         try:
             conn = sqlite3.connect(self.sqlite_db)

@@ -128,6 +128,7 @@ async def predict(data: dict):
             "table_name": "risultati_modello",
             "data": [{"quality":5,"predicted_quality":5.0},{"quality":5,"predicted_quality":5.0}]
         }
+
         response = requests.post("http://127.0.0.1:8000/risultati_modello", json=json_dati)
 
         if response.status_code == 200:
