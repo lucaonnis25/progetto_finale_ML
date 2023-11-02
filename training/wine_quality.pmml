@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.99.1"/>
+		<Timestamp>2023-11-02T12:15:21Z</Timestamp>
+	</Header>
+	<MiningBuildTask>
+		<Extension name="repr">PMMLPipeline(steps=[('lin', LinearRegression())])</Extension>
+	</MiningBuildTask>
+	<DataDictionary>
+		<DataField name="quality" optype="continuous" dataType="double"/>
+		<DataField name="fixed_acidity" optype="continuous" dataType="double"/>
+		<DataField name="citric_acid" optype="continuous" dataType="double"/>
+		<DataField name="residual_sugar" optype="continuous" dataType="double"/>
+		<DataField name="chlorides" optype="continuous" dataType="double"/>
+		<DataField name="free_sulfur_dioxide" optype="continuous" dataType="double"/>
+		<DataField name="pH" optype="continuous" dataType="double"/>
+		<DataField name="sulphates" optype="continuous" dataType="double"/>
+		<DataField name="alcohol" optype="continuous" dataType="double"/>
+	</DataDictionary>
+	<RegressionModel functionName="regression" algorithmName="sklearn.linear_model._base.LinearRegression">
+		<MiningSchema>
+			<MiningField name="quality" usageType="target"/>
+			<MiningField name="fixed_acidity"/>
+			<MiningField name="citric_acid"/>
+			<MiningField name="residual_sugar"/>
+			<MiningField name="chlorides"/>
+			<MiningField name="free_sulfur_dioxide"/>
+			<MiningField name="pH"/>
+			<MiningField name="sulphates"/>
+			<MiningField name="alcohol"/>
+		</MiningSchema>
+		<RegressionTable intercept="1.8241194227107322">
+			<NumericPredictor name="fixed_acidity" coefficient="-0.0040123603460691815"/>
+			<NumericPredictor name="citric_acid" coefficient="0.3574773743828736"/>
+			<NumericPredictor name="residual_sugar" coefficient="0.013875609709258448"/>
+			<NumericPredictor name="chlorides" coefficient="-4.491161149019432"/>
+			<NumericPredictor name="free_sulfur_dioxide" coefficient="0.004914664144271386"/>
+			<NumericPredictor name="pH" coefficient="0.06262486294615494"/>
+			<NumericPredictor name="sulphates" coefficient="0.8019357988081547"/>
+			<NumericPredictor name="alcohol" coefficient="0.3141055098804424"/>
+		</RegressionTable>
+	</RegressionModel>
+</PMML>

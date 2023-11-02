@@ -1,7 +1,8 @@
 import sqlite3
 from fastapi import FastAPI, HTTPException
+from sklearn2pmml import PMMLPipeline
+
 from DB.data_utils import DataUtils
-from modello.modello import Predict
 import pandas as pd
 from pypmml import Model
 
@@ -107,11 +108,17 @@ async def update_data(json_data: dict):
 
 # TEST DEL MODELLO
 @app.post("/predict")
-async def predict(json_data:dict):
+async def predict(data:dict):
     try:
-        url = json_data.get('url')
-        df = pd.read_csv(url)
-        model = Model.fromFile('modello/wine_quality.pmml')
+        url = data.get("url")
+        df = pd.read_csv(url, encoding='UTF-8', sep=";")
+        print(df)
+        df = df.drop('density', axis=1)
+        df = df.drop('volatile_acidity', axis=1)
+        df = df.drop('total_sulfur_dioxide', axis=1)
+        # controllo se riesco a leggere il df
+        print(df)
+        model = Model.fromFile('training/wine_quality.pmml')
         y_pred = model.predict(df)
         print(y_pred)
     except Exception as e:
