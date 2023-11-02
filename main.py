@@ -6,6 +6,8 @@ from DB.data_utils import DataUtils
 import pandas as pd
 from pypmml import Model
 
+from modello.modello import Predict
+
 app = FastAPI()
 sqlite_db = 'dbML.sqlite'
 
@@ -108,20 +110,12 @@ async def update_data(json_data: dict):
 
 # TEST DEL MODELLO
 @app.post("/predict")
-async def predict(data:dict):
+async def predict(data: dict):
     try:
-        url = data.get("url")
-        df = pd.read_csv(url, encoding='UTF-8', sep=";")
-        print(df)
-        df = df.drop('density', axis=1)
-        df = df.drop('volatile_acidity', axis=1)
-        df = df.drop('total_sulfur_dioxide', axis=1)
-        # controllo se riesco a leggere il df
-        print(df)
-        model = Model.fromFile('training/wine_quality.pmml')
-        y_pred = model.predict(df)
-        print(y_pred)
+        predict = Predict(sqlite_db)
+        predict.predict_and_save(data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Si è verificato un errore durante l'elaborazione: {str(e)}")
+
 
 
