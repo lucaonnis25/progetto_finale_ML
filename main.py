@@ -1,6 +1,9 @@
 import sqlite3
 from fastapi import FastAPI, HTTPException
 from DB.data_utils import DataUtils
+from modello.modello import Predict
+import pandas as pd
+from pypmml import Model
 
 app = FastAPI()
 sqlite_db = 'dbML.sqlite'
@@ -101,3 +104,17 @@ async def update_data(json_data: dict):
         return {"message": f"aggiornamento della tabella '{table_name}'"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Si è verificato un errore: {str(e)}")
+
+# TEST DEL MODELLO
+@app.post("/predict")
+async def predict(json_data:dict):
+    try:
+        url = json_data.get('url')
+        df = pd.read_csv(url)
+        model = Model.fromFile('modello/wine_quality.pmml')
+        y_pred = model.predict(df)
+        print(y_pred)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Si è verificato un errore durante l'elaborazione: {str(e)}")
+
+
