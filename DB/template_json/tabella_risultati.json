@@ -1,0 +1,4 @@
+{
+  "table_name": "risultati_modello",
+  "column_name": ["quality", "predicted_quality"]
+}

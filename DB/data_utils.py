@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from watchfiles.cli import logger
 import re
 
-
+# Classe per interazione con db
 class DataUtils:
     # inizializzo la classe passando il db da utilizzare
     def __init__(self, sqlite_db):
@@ -147,19 +147,14 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
-    def insert_data_into_db(self, json_data: dict):
+    def insert_risultati_modello(self, data, table_name):
         try:
-            table_name = json_data.get("table_name")
-            data = json_data.get("data")
-
-            conn = sqlite3.connect('path_to_your_sqlite_db.db')
+            conn = sqlite3.connect(self.sqlite_db)
             cursor = conn.cursor()
-
-            for item in data:
-                quality = item.get("quality")
-                predicted_quality = item.get("predicted_quality")
-                cursor.execute(f"INSERT INTO {table_name} (quality, predicted_quality) VALUES (?, ?)",
-                               (quality, predicted_quality))
+            column_names = list(data[0].keys())
+            for record in data:
+                cursor.execute(f"INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}) VALUES (?, ?)",
+                               (record[column_names[0]], record[column_names[1]]))
 
             conn.commit()
             conn.close()
