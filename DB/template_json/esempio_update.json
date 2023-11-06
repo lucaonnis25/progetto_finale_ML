@@ -1,7 +1,7 @@
 {
   "table_name": "dati_vini_test",
-  "new_value": "6",
+  "new_value": "600",
   "condition_column": "quality",
-  "condition_value": "3",
+  "condition_value": "4",
   "condition_id": "id"
 }

@@ -2,7 +2,7 @@
   "table_name": "dati_vini_test",
   "data":[
  {
-   "fixed_acidity": 11,
+   "fixed_acidity": 90,
    "volatile_acidity": 0.27,
    "citric_acid": 0.36,
    "residual_sugar": 20.7,

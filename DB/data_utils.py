@@ -6,6 +6,7 @@ from watchfiles.cli import logger
 import re
 
 # Classe per interazione con db
+# Le funzioni tramite gli endpoint ricevono un file json contente le informazioni per il funzionamento. Ho creato una cartella contente tutti i template json
 class DataUtils:
     # inizializzo la classe passando il db da utilizzare
     def __init__(self, sqlite_db):
@@ -21,6 +22,7 @@ class DataUtils:
             ''')
             # ottengo i nomi delle colonne da inserire nel json ritornato
             column_names = [description[0] for description in cursor.description]
+            # estraggo tutti i risutati della query tramite il metodo fetchall
             data = cursor.fetchall()
             conn.close()
 
@@ -102,6 +104,7 @@ class DataUtils:
             cursor = conn.cursor()
 
             column_names = list(data[0].keys())
+            # siccome so già la struttura dei dati che saranno caricati, creo una tabella con i rispettivi campi.
             cursor.execute(f'''
                 CREATE TABLE IF NOT EXISTS {table_name} (
                     id INTEGER,
@@ -139,6 +142,7 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
+    # funzione per inserire tabelle senza dati
     def create_empty_table(self, column_name, table_name):
         try:
             conn = sqlite3.connect(self.sqlite_db)
@@ -205,6 +209,7 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
+    # vengono passati: il nome della tabella su cui effettuare l'update, il nuovo valore, la colonna su cui effettuare l'update, l'id ed il valore da modificare
     def update_table(self, table_name, new_value, condition_column, condition_value, condition_id):
         try:
             conn = sqlite3.connect(self.sqlite_db)
