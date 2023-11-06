@@ -15,14 +15,16 @@ class DataUtils:
         try:
             conn = sqlite3.connect(self.sqlite_db)
             cursor = conn.cursor()
+            # eseguo la query di selezione
             cursor.execute(f'''
                 SELECT * FROM {table_name}
             ''')
-
+            # ottengo i nomi delle colonne da inserire nel json ritornato
             column_names = [description[0] for description in cursor.description]
             data = cursor.fetchall()
             conn.close()
 
+            #creo un array vuoto in cui inserire i json che ottengo dalla query
             response = []
             for row in data:
                 response_row = {}
@@ -38,8 +40,44 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
+    # funzione per ritornare tutti i vini di una determinata qualità
+    def get_by_quality(self, table_name, quality):
+        try:
+            conn = sqlite3.connect(self.sqlite_db)
+            cursor = conn.cursor()
+            # eseguo la query di selezione
+            cursor.execute(f'''
+                SELECT * FROM {table_name} WHERE quality=?
+            ''', (quality,))
+
+            # ottengo i nomi delle colonne da inserire nel json ritornato
+            column_names = [description[0] for description in cursor.description]
+            data = cursor.fetchall()
+            conn.close()
+
+            if not data:
+                return None
+
+            #creo un array vuoto in cui inserire i json che ottengo dalla query
+            response = []
+            for row in data:
+                response_row = {}
+                for i, column_name in enumerate(column_names):
+                    response_row[column_name] = row[i]
+                response.append(response_row)
+
+            return response
+
+        except Exception as e:
+            error_message = f"Si è verificato un errore: {str(e)}"
+            print(error_message)
+            logger.error(error_message)
+            raise HTTPException(status_code=500, detail=error_message)
+
+    # funzioni per eseguire un controllo sull'input del nome della tabella e dei dati
     def valid_input_table(self, table_name: str):
         pattern = re.compile('[\'!?#]')
+        # ricerco se sono presenti nell'input ricevuto dei valori del pattern
         if pattern.search(table_name):
             return False
         return True
@@ -47,6 +85,7 @@ class DataUtils:
     def valid_input_data(self, data):
         pattern = re.compile('[\'!?#]')
         for key, value in data.items():
+            # ricerco se sono presenti nell'input ricevuto dei valori del pattern
             if pattern.search(str(key)) or pattern.search(str(value)):
                 return False
         return True
@@ -147,22 +186,6 @@ class DataUtils:
             logger.error(error_message)
             raise HTTPException(status_code=500, detail=error_message)
 
-    def insert_risultati_modello(self, data, table_name):
-        try:
-            conn = sqlite3.connect(self.sqlite_db)
-            cursor = conn.cursor()
-            column_names = list(data[0].keys())
-            for record in data:
-                cursor.execute(f"INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}) VALUES (?, ?)",
-                               (record[column_names[0]], record[column_names[1]]))
-
-            conn.commit()
-            conn.close()
-
-            return {"message": "Dati inseriti nel database con successo."}
-
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
     def delete_data(self, data, table_name):
         try:
             conn = sqlite3.connect(self.sqlite_db)

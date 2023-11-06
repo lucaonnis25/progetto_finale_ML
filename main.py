@@ -20,7 +20,16 @@ async def get_data_json(json_data: dict):
     except Exception as e:
         return {"error": str(e)}
 
-
+@app.post("/get_by_quality")
+async def get_by_quality(json_data: dict):
+    try:
+        table_name = json_data.get("table_name", "")
+        quality = json_data.get("quality", "")
+        utils = DataUtils(sqlite_db)
+        data = utils.get_by_quality(table_name, quality)
+        return {"data": data}
+    except Exception as e:
+        return {"error": str(e)}
 # CREATE
 @app.post("/crea_con_dati")
 async def create_table_with_data(json_data: dict):
@@ -62,21 +71,6 @@ async def insert_json_into_table(json_data: dict):
         utils = DataUtils(sqlite_db)
 
         utils.insert_data_from_json(data, table_name)
-
-        return {"message": "dati inseriti nel database con successo."}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/risultati_modello")
-async def insert_json_model(json_data: dict):
-    try:
-        # estrazione dei dati contenuti nel json
-        table_name = json_data.get("table_name", "")
-        data = json_data.get("data", [])
-
-        utils = DataUtils(sqlite_db)
-
-        utils.insert_risultati_modello(data, table_name)
 
         return {"message": "dati inseriti nel database con successo."}
     except Exception as e:

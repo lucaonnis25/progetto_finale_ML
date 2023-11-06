@@ -1,3 +1,8 @@
 {
   "table_name" : "dati_vini_rossi"
 }
+
+{
+  "table_name" : "dati_vini_rossi",
+  "quality" : "5"
+}
