@@ -28,10 +28,8 @@ class Predict:
             y_pred = model.predict(df)
             # ho pensato di arrotondare i valori delle predizioni perché nei dati originali i valori di quality erano interi
             y_pred = np.round(y_pred)
-            # estraggo i valori reali della quality dal df letto in partenza
-            real_quality = df['quality']
-            # creo un df con i dati di quality reali e quelli predetti per averne il confronto
-            df_db = pd.concat([real_quality, y_pred], axis=1)
+            # creo un df con i dati usati per la predizione più la quality reale e con la predizione per averne il confronto
+            df_db = pd.concat([df, y_pred], axis=1)
             # conversione in  striga json
             json_output = df_db.to_json(orient="records")
             # conversione in oggetto json
@@ -43,8 +41,8 @@ class Predict:
             column_names = list(json_output_object[0].keys())
             # salvataggio nel db
             for record in json_output_object:
-                cursor.execute(f"INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}) VALUES (?, ?)",
-                               (record[column_names[0]], record[column_names[1]]))
+                cursor.execute(f"INSERT INTO {table_name} ({column_names[0]}, {column_names[1]}, {column_names[2]}, {column_names[3]}, {column_names[4]}, {column_names[5]}, {column_names[6]}, {column_names[7]}, {column_names[8]}, {column_names[9]}) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                               (record[column_names[0]], record[column_names[1]], record[column_names[2]], record[column_names[3]], record[column_names[4]], record[column_names[5]], record[column_names[6]], record[column_names[7]], record[column_names[8]], record[column_names[9]]))
 
             conn.commit()
             conn.close()

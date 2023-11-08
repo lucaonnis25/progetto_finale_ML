@@ -1,4 +1,4 @@
 {
   "table_name": "risultati_modello",
-  "column_name": ["quality", "predicted_quality"]
+  "column_name": ["fixed_acidity","citric_acid","residual_sugar","chlorides","free_sulfur_dioxide","pH","sulphates","alcohol","quality", "predicted_quality"]
 }

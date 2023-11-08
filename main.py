@@ -22,6 +22,7 @@ async def get_data_json(json_data: dict):
     except Exception as e:
         return {"error": str(e)}
 
+# endpoint per ottenere i vini in base alla qualità
 @app.post("/get_by_quality")
 async def get_by_quality(json_data: dict):
     try:

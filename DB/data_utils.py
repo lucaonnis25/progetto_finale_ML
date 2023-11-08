@@ -84,13 +84,7 @@ class DataUtils:
             return False
         return True
 
-    def valid_input_data(self, data):
-        pattern = re.compile('[\'!?#]')
-        for key, value in data.items():
-            # ricerco se sono presenti nell'input ricevuto dei valori del pattern
-            if pattern.search(str(key)) or pattern.search(str(value)):
-                return False
-        return True
+
 
 # utilizzo questa funzione per importare i dataset che hanno già dei dati al loro interno
     def create_table_with_data(self, data, table_name):
@@ -145,6 +139,12 @@ class DataUtils:
     # funzione per inserire tabelle senza dati
     def create_empty_table(self, column_name, table_name):
         try:
+            #check sul nome dell'input della tabella
+            if not self.valid_input_table(table_name):
+                error_message = f"Il nome della tabella {table_name} contiene caratteri speciali. Impossibile creare la tabella."
+                print(f"Il nome della tabella {table_name} contiene caratteri speciali. Impossibile creare la tabella.")
+                raise ValueError(error_message)
+
             conn = sqlite3.connect(self.sqlite_db)
             cursor = conn.cursor()
             query = f'CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY'
