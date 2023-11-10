@@ -28,7 +28,7 @@ class Predict:
             y_pred = model.predict(df)
             # ho pensato di arrotondare i valori delle predizioni perché nei dati originali i valori di quality erano interi
             y_pred = np.round(y_pred)
-            # creo un df con i dati usati per la predizione più la quality reale e con la predizione per averne il confronto
+            # creo un df con i dati usati per la predizione (compresa la quality reale) più la predizione per averne il confronto
             df_db = pd.concat([df, y_pred], axis=1)
             # conversione in  striga json
             json_output = df_db.to_json(orient="records")
@@ -36,6 +36,7 @@ class Predict:
             json_output_object = json.loads(json_output)
 
             # volevo effettuare questa operazione passando il json dei risultati ad una funzione apposita chiamndo un'altra api ma per qualche motivo che sinceramente non sono riuscito a capire, la richiesta post sembrava andare in timeout e bloccava l'applicativo
+            # quindi ho deciso di effettuare la connessione direttamente all'interno della funzione
             conn = sqlite3.connect(self.sqlite_db)
             cursor = conn.cursor()
             column_names = list(json_output_object[0].keys())
